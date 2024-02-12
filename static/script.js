@@ -94,8 +94,8 @@ document.getElementById("trainSchedule").addEventListener("submit", async functi
     const options = {
         method: 'GET',
         headers: {
-            'X-RapidAPI-Key': 'c3149c2770msh2be22d78b5094a1p166e5cjsnb6f0b486defc',
-            'X-RapidAPI-Host': 'irctc1.p.rapidapi.com'
+            'X-RapidAPI-Key': '',
+            'X-RapidAPI-Host': ''
         }
     };
     try {
@@ -272,7 +272,7 @@ changeLanguageButton.addEventListener('click', () => {
     }    
     // Function to send user's message to ChatGPT
     async function getChatGPTResponse(userMessage) {
-        const apiKey = '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'; // Replace with your actual API key
+        const apiKey = ''; // Replace with your actual API key
         const apiEndpoint = 'https://api.openai.com/v1/chat/completions';
 
         const headers = {
