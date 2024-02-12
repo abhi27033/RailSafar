@@ -10,8 +10,8 @@ document.getElementById("railwayForm").addEventListener("submit", async function
     const options = {
         method: 'GET',
         headers: {
-            'X-RapidAPI-Key': 'c3149c2770msh2be22d78b5094a1p166e5cjsnb6f0b486defc',
-            'X-RapidAPI-Host': 'irctc1.p.rapidapi.com'
+            'X-RapidAPI-Key': '',
+            'X-RapidAPI-Host': ''
         }
     };
     try {
