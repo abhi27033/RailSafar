@@ -12,11 +12,11 @@ import os
 import pygame
 
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\ABHISHEK SINGH\Desktop\SIH\Rail_Safar\arctic-window-399718-fa60c692e358.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "RailSafar.json"
 
 @csrf_exempt
 def record_and_transcribe(request):
-    output_filename = r'C:\Users\ABHISHEK SINGH\Desktop\SIH\Rail_Safar\polls\op.wav'
+    output_filename = "op.wav"
     record_duration = 5
 
     # Record audio from the microphone
@@ -66,3 +66,5 @@ def speech_to_text(request):
             return JsonResponse({'error': str(e)})
     else:
         return JsonResponse({'error': 'Invalid request method'})
+
+

@@ -177,12 +177,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const textSendBtn = document.getElementById('text-send-btn');
     const voiceInputBtn = document.getElementById('voice-input-btn');
 
-    // Initialize SpeechRecognition
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
-
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
-    
     function displayMessage(sender, message, customClass) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `chat-box chat-${sender.toLowerCase()} ${customClass}`;
@@ -190,24 +184,52 @@ document.addEventListener('DOMContentLoaded', function () {
         chatBox.appendChild(messageDiv);
     }
     // Event listener for the "Voice Input" button
+    selectedLanguage='';
+const languageSelector = document.getElementById('language-selector');
+const changeLanguageButton = document.getElementById('change-language-button');
+changeLanguageButton.addEventListener('click', () => {
+    
+    selectedLanguage = languageSelector.value;
+    console.log(selectedLanguage);
+});
     voiceInputBtn.addEventListener('click', () => {
         voiceInputBtn.textContent = 'Listening...';
-
-        recognition.start();
+    
+        // Call the Django endpoint for recording and transcription
+        fetch('/record_and_transcribe/',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `target=${selectedLanguage}`,
+        }) 
+            .then(response => response.json())
+            .then(data => {
+                const userSpokenMessage = data.transcribed_text;
+    
+                // Display user spoken message in the text input
+                textInput.value = userSpokenMessage;
+    
+                // Reset the "Voice Input" button
+                voiceInputBtn.textContent = 'Voice Input';
+            })
+            .catch(error => console.error('Error:', error));
     });
-
-    // Event listener for when speech is recognized
-    recognition.onresult = function(event) {
-        const userSpokenMessage = event.results[0][0].transcript;
-
-        // Display user spoken message in the text input
-        textInput.value = userSpokenMessage;
-
-        // Reset the "Voice Input" button
-        voiceInputBtn.textContent = 'Voice Input';
-    };
-
+    
     // Event listener for the "Send Text" button
+    assistantResponse=''
+    const speak=document.getElementById('speak-btn');
+    speak.addEventListener('click',async()=>{
+        console.log(assistantResponse)
+        fetch('/speak_text/',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `text_data=${assistantResponse}&target=${selectedLanguage}`,
+    })
+});
+
     textSendBtn.addEventListener('click', async () => {
         const userMessage = textInput.value;
         if (!userMessage) return;
@@ -220,8 +242,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const chatGPTResponse = await getChatGPTResponse(userMessage);
 
             // Extract and display ChatGPT's response
-            const assistantResponse = chatGPTResponse.data.choices[0].message.content;
+            assistantResponse = chatGPTResponse.data.choices[0].message.content;
             displayMessage('RailSafar Bot', assistantResponse);
+
         } catch (error) {
             console.error('Error fetching RailSafar response:', error);
         }
@@ -230,9 +253,26 @@ document.addEventListener('DOMContentLoaded', function () {
         textInput.value = '';
     });
 
+    async function sendTextToDjango(userMessage, selectedLanguage) {
+        try {
+            const response = await fetch('/speak_text/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `text_data=${userMessage}&target=${selectedLanguage}`,
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to send text to Django.');
+            }
+        } catch (error) {
+            console.error('Error sending text to Django:', error);
+        }
+    }    
     // Function to send user's message to ChatGPT
     async function getChatGPTResponse(userMessage) {
-        const apiKey = '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'; // Replace with your actual API key
+        const apiKey = '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'; // Replace with your actual API key
         const apiEndpoint = 'https://api.openai.com/v1/chat/completions';
 
         const headers = {

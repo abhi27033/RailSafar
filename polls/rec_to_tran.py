@@ -36,7 +36,7 @@ def record_audio(filename, duration=5, sample_rate=16000, channels=1):
 
 def transcribe_speech(input_file, target_language):
     # Replace with the path to your service account JSON key file
-    credentials_path = r"C:\Users\ABHISHEK SINGH\Desktop\SIH\Rail_Safar\arctic-window-399718-fa60c692e358.json"
+    credentials_path = "RailSafar.json"
     # Initialize the Google Cloud Speech-to-Text client
     credentials = service_account.Credentials.from_service_account_file(
         credentials_path, scopes=["https://www.googleapis.com/auth/cloud-platform"]
@@ -65,12 +65,12 @@ def transcribe_speech(input_file, target_language):
 # TEST
 
 # if __name__ == "__main__":
-#     output_filename = r'C:\Users\ABHISHEK SINGH\Desktop\chatbot_test\chatbot_test\output_audio.wav'
+#     output_filename = r'op.wav'
 #     record_duration = 5
 #     # Record audio from the microphone
 #     record_audio(output_filename, duration=record_duration)
 #     print(f"Audio recorded and saved to {output_filename}")
 #     # Transcribe the recorded audio to Hindi text
-#     transcribe_text = transcribe_speech(output_filename)
+#     transcribe_text = transcribe_speech(output_filename,'ja')
 #     print("Transcribed text")
 #     print(transcribe_text)
