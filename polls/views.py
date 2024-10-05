@@ -66,5 +66,3 @@ def speech_to_text(request):
             return JsonResponse({'error': str(e)})
     else:
         return JsonResponse({'error': 'Invalid request method'})
-
-
